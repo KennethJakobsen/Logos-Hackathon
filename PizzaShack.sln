@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PizzaShack", "PizzaShack\PizzaShack.csproj", "{2BD308D8-CCE9-4562-BE35-526988690863}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontend", "Frontend", "{D3FFDFBE-7DC3-43BB-9F18-44B9A5E5E764}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Menu", "Menu", "{7B38539C-1A6B-406E-86F3-DD13E38E2A39}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Device", "Device", "{6C371A02-9899-4D49-907C-1DFB15106B6A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Orders", "Orders", "{1141948E-8E2B-4790-ADF1-6BA054FC5E44}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateway", "Gateway", "{9BE22AB5-C19F-4087-9AD9-9D5C6AF5A0EB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1BD94F27-54C2-49A7-81F1-D4378C06F599}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2BD308D8-CCE9-4562-BE35-526988690863}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BD308D8-CCE9-4562-BE35-526988690863}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BD308D8-CCE9-4562-BE35-526988690863}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BD308D8-CCE9-4562-BE35-526988690863}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+	EndGlobalSection
+EndGlobal
