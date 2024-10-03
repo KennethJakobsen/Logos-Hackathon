@@ -1,6 +1,18 @@
 ﻿services:
-  webapplication1:
-    image: webapplication1
+  gateway:
+    image: gateway
     build:
       context: .
-      dockerfile: WebApplication1/Dockerfile
+      dockerfile: src/Gateway/Gateway/Dockerfile
+
+  menu.api:
+    image: menu.api
+    build:
+      context: .
+      dockerfile: src/Menu/Menu.Api/Dockerfile
+
+  menu.worker:
+    image: menu.worker
+    build:
+      context: .
+      dockerfile: src/Menu/Menu.Worker/Dockerfile
