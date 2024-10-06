@@ -9,6 +9,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0"/>
         <PackageReference Include="Npgsql" Version="8.0.4" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.8" />
@@ -24,9 +28,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Menu.Messages\Menu.Messages.csproj" />
       <ProjectReference Include="..\Menu.Application\Menu.Application.csproj" />
       <ProjectReference Include="..\Menu.Domain\Menu.Domain.csproj" />
       <ProjectReference Include="..\Menu.Infrastructure\Menu.Infrastructure.csproj" />
+      <ProjectReference Include="..\Menu.Messages\Menu.Messages.csproj" />
     </ItemGroup>
 </Project>

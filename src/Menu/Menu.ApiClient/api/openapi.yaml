@@ -1,0 +1,45 @@
+openapi: 3.0.1
+info:
+  title: Menu.Api
+  version: "1.0"
+servers:
+- url: /
+paths:
+  /Menu:
+    get:
+      operationId: GetMenuAllItems
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/MenuItem'
+                type: array
+          description: OK
+      tags:
+      - Menu.Api
+components:
+  schemas:
+    MenuItem:
+      additionalProperties: false
+      example:
+        price: 6.027456183070403
+        name: name
+        description: description
+        id: 0
+      properties:
+        id:
+          format: int32
+          type: integer
+        name:
+          nullable: true
+          type: string
+        price:
+          format: double
+          type: number
+        description:
+          nullable: true
+          type: string
+      type: object
+

@@ -20,8 +20,6 @@
       <ProjectReference Include="..\src\Gateway\Gateway\Gateway.csproj" />
       <ProjectReference Include="..\src\Menu\Menu.Api\Menu.Api.csproj" />
       <ProjectReference Include="..\src\Menu\Menu.Worker\Menu.Worker.csproj" />
-      <ProjectReference Include="..\src\Orders\Orders.Api\Orders.Api.csproj" />
-      <ProjectReference Include="..\src\Orders\Orders.Worker\Orders.Worker.csproj" />
     </ItemGroup>
 
 </Project>
