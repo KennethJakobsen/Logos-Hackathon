@@ -1,3 +1,5 @@
+using Projects;
+
 var builder = DistributedApplication.CreateBuilder(args);
 
 var dbuser = builder.AddParameter("db-user", true);
@@ -13,10 +15,12 @@ var menuworker = builder.AddProject<Projects.Menu_Worker>("menu-worker")
     .WithReference(postgres)
     .WithReference(rabbit);
 
-builder.AddProject<Projects.Gateway>("gateway")
+var gateway = builder.AddProject<Projects.Gateway>("gateway")
     .WithReference(menu)
     .WithReference(menuworker)
     .WithReference(rabbit);
 
+builder.AddProject<PizzaFrontend>("frontend")
+    .WithReference(gateway);
 
 builder.Build().Run();

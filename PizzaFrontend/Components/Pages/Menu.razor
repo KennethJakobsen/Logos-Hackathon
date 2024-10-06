@@ -1,0 +1,9 @@
+﻿@page "/Menu"
+@using Gateway.ApiClient.Api
+@inject GatewayApi _api
+<h3>Menu</h3>
+
+@foreach (var item in _api.GetAlleMenuItems())
+{
+    <div><p>@item.Name</p> <p>@item.Price</p><p>@item.Description</p></div>
+}

@@ -17,6 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\PizzaFrontend\PizzaFrontend.csproj" />
       <ProjectReference Include="..\src\Gateway\Gateway\Gateway.csproj" />
       <ProjectReference Include="..\src\Menu\Menu.Api\Menu.Api.csproj" />
       <ProjectReference Include="..\src\Menu\Menu.Worker\Menu.Worker.csproj" />

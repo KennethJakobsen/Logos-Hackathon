@@ -29,6 +29,7 @@ builder.Services.AddDbContext<MenuDatabaseContext>(o => o.UseNpgsql(builder.Conf
 
 var host = builder.Build();
 
+await Task.Delay(5000);
 await using var scope = host.Services.CreateAsyncScope();
 await using var db = scope.ServiceProvider.GetService<MenuDatabaseContext>();
 var pending = await db.Database.GetPendingMigrationsAsync();
