@@ -1,0 +1,89 @@
+openapi: 3.0.1
+info:
+  title: Gateway
+  version: "1.0"
+servers:
+- url: /
+paths:
+  /Menu:
+    get:
+      operationId: GetAlle´MenuItems
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/MenuItem'
+                type: array
+          description: Success
+      tags:
+      - Gateway
+  /Menu/{id}:
+    post:
+      operationId: CreatMenuItem
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: int32
+          type: integer
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMenuItemRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+      tags:
+      - Gateway
+components:
+  schemas:
+    CreateMenuItemRequest:
+      additionalProperties: false
+      example:
+        price: 6.027456183070403
+        name: name
+        description: description
+        id: 0
+      properties:
+        id:
+          format: int32
+          type: integer
+        name:
+          nullable: true
+          type: string
+        price:
+          format: double
+          type: number
+        description:
+          nullable: true
+          type: string
+      type: object
+    MenuItem:
+      additionalProperties: false
+      example:
+        price: 6.027456183070403
+        name: name
+        description: description
+        id: 0
+      properties:
+        id:
+          format: int32
+          type: integer
+        name:
+          nullable: true
+          type: string
+        price:
+          format: double
+          type: number
+        description:
+          nullable: true
+          type: string
+      type: object
+
