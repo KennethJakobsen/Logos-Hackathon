@@ -1,124 +1,246 @@
-**Overall Architecture:**
+## **Project Overview**
 
-- **Gateway:**
-  - Implement an API Gateway using ASP.NET Core that acts as an HTTP facade for all microservices.
-  - The gateway routes HTTP requests to the appropriate services and handles any necessary authentication and authorization, if needed.
+You're building a pizza restaurant application with a microservices architecture, using the following technologies:
 
-- **Microservices:**
-  - Each service follows Domain-Driven Design (DDD) principles and is responsible for a specific domain area.
-  - Services communicate asynchronously via RabbitMQ using Rebus as the messaging library.
-  - Each service has its own database (Postgres) and uses Entity Framework Core for data access.
+- **Backend Technologies**: ASP.NET Core microservices, RabbitMQ, Rebus, Entity Framework Core, PostgreSQL, .NET Aspire.
+- **Frontend Technology**: Blazor.
+- **Architecture Principles**:
+  - **Microservices per DDD**: Each service follows Domain-Driven Design principles.
+  - **API Service**: Read-only access to the database, activated via HTTP.
+  - **Worker Service**: Read and write access to the database, activated via AMQP (RabbitMQ).
 
-- **Communication:**
-  - **HTTP:** For synchronous operations via the API Service.
-  - **AMQP:** For asynchronous operations and background processes via the Worker Service.
+---
 
-- **Docker Compose:**
-  - Used to orchestrate all services, RabbitMQ, and Postgres databases in the development environment.
+## **General Prerequisites**
 
-**Microservice Architecture:**
+Before diving into specific tasks, ensure that all participants have the following prerequisites:
 
-- **API Service:**
-  - Read-only access to the database.
-  - Exposes HTTP endpoints.
-  - Used for fetching data and performing actions that do not change the state.
+- **Development Environment**:
+  - Install the latest version of **.NET SDK** (.NET 6 or later).
+  - Set up **Visual Studio** or **Visual Studio Code** with necessary extensions.
 
-- **Worker Service:**
-  - Read and write access to the database.
-  - Listens to messages via RabbitMQ.
-  - Handles command messages and performs domain logic that changes the state.
+---
 
-**Services and Use Cases:**
+## **Tasks Breakdown**
 
-1. **Gateway Service:**
-   - Acts as the entry point for all client requests.
-   - Routes requests to the appropriate API Services.
+### **1. Gateway Service**
 
-2. **Menu Service:**
-   - *Use Cases:*
-     - **Create new menu items:** Sent as a command via AMQP to the Worker Service.
-     - **Retrieve all menu items:** Available via the API Service through the Gateway.
+#### **Tasks**:
 
-3. **Orders Service:**
-   - *Use Cases:*
-     - **Create new order:** API Service receives the request and sends a command to the Worker Service via AMQP.
-     - **Retrieve open orders / all orders:** Available via the API Service.
-     - **Update order status:** Changes are sent as commands to the Worker Service.
+- **Implement HTTP Facade**:
+  - Develop a Gateway service that routes HTTP requests to the appropriate backend services.
 
-4. **Production Service:**
-   - *Use Cases:*
-     - **Create new production:** Initiated by a message from the Orders Service or directly via API.
-     - **Change status:** Handled by the Worker Service based on incoming messages.
+#### **Prerequisites**:
 
-5. **Notifications Service:**
-   - *Use Cases:*
-     - **Receive updates on IDs:** Listens to relevant events on RabbitMQ and sends notifications (e.g., via SignalR or email).
+- Understanding of **API Gateway patterns**.
+- Experience with **ASP.NET Core Middleware**.
+- Familiarity with **HTTP routing and proxying**.
 
-6. **Device Service:**
-   - *Use Cases:*
-     - **Yes / No to orders:** Devices can accept or reject orders via the API Service, which sends commands to the Worker Service.
+---
 
-7. **Frontend (Blazor App):**
-   - *Use Cases:*
-     - Interacts with the Gateway to perform all necessary operations.
-     - Supports scenarios such as displaying the menu, creating orders, viewing order status, etc.
+### **2. Menu Service**
 
-**Technologies:**
+#### **API Service (Read-only via HTTP)**
 
-- **Blazor:** For frontend development of the web application.
-- **ASP.NET Core Microservices:** For building API and Worker Services.
-- **RabbitMQ & Rebus:** For asynchronous communication between services.
-- **Entity Framework Core:** For data access in services.
-- **Postgres:** As the database system for each service.
-- **Aspire:** If you mean [ASP.NET Identity](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity), it can be omitted since user management is not relevant. If "Aspire" refers to something else, ensure that it integrates correctly.
-- **Docker Compose:** For containerization and orchestration of the application.
+- **Implement Endpoints**:
+  - **Get All Menu Items**: `/api/menu/items`
+  
+- **Data Access**:
+  - Use Entity Framework Core to read data from the Menu database.
 
-**Additional Considerations:**
+#### **Worker Service (Write via AMQP)**
 
-- **Error Handling and Logging:**
-  - Implement global error handling in API Services.
-  - Use logging frameworks like Serilog to log information from both API and Worker Services.
+- **Handle Messages**:
+  - **Create New Menu Item**:
+    - Listen for `CreateMenuItemCommand` messages via RabbitMQ.
+    - Implement logic to insert new menu items into the database.
 
-- **Data Consistency:**
-  - Be mindful of data consistency across services, especially when using asynchronous communication.
+- **Message Contracts**:
+  - Define message schemas for `CreateMenuItemCommand`.
 
-- **Scaling:**
-  - With Docker Compose, you can easily scale your services up or down as needed.
+#### **Database Setup**:
 
-- **Testing:**
-  - Write unit tests for domain logic in Worker Services.
-  - Consider integration tests to ensure communication between services works as expected.
+- **Design Schema**:
+  - Create tables for Menu Items with fields like `Id`, `Name`, `Description`, `Price`, etc.
 
-- **Security:**
-  - Even though user management is not relevant, you should still consider protecting your endpoints against unauthorized access, perhaps using API keys or other mechanisms.
+- **Migrations**:
+  - Use EF Core migrations to create and update the database schema.
 
-**Project Planning Suggestions:**
+#### **Prerequisites**:
 
-1. **Set Up the Environment:**
-   - Configure Docker Compose with base services like RabbitMQ and Postgres.
+- Knowledge of **Entity Framework Core** with PostgreSQL.
+- Experience with **Rebus** for message handling.
+- Understanding of **RabbitMQ** and **AMQP protocols**.
 
-2. **Develop the Gateway:**
-   - Implement basic routing to a test service.
+---
 
-3. **Implement the Menu Service:**
-   - Start with the Menu Service as it is central to other functions.
-   - Implement both API and Worker Services.
+### **3. Orders Service**
 
-4. **Develop the Frontend:**
-   - Build the basic structure of the Blazor app and integrate it with the Menu Service via the Gateway.
+#### **API Service (Read-only via HTTP)**
 
-5. **Implement the Orders Service:**
-   - Build API and Worker Services for order processing.
-   - Integrate with the Frontend to create and display orders.
+- **Implement Endpoints**:
+  - **Get Open Orders**: `/api/orders/open`
+  - **Get All Orders**: `/api/orders`
 
-6. **Implement Remaining Services:**
-   - Follow the same pattern for Production, Notifications, and Device Services.
+#### **Worker Service (Read/Write via AMQP)**
 
-7. **Testing and Debugging:**
-   - Test each service individually and then in conjunction with others.
+- **Handle Messages**:
+  - **Create New Order**:
+    - Listen for `CreateOrderCommand` messages.
+    - Insert new orders into the database.
+  - **Update Order Status**:
+    - Listen for `UpdateOrderStatusCommand` messages.
+    - Update the status of existing orders.
 
-8. **Final Adjustments:**
-   - Optimize performance.
-   - Prepare a presentation or demo for the conclusion of the hackathon.
+- **Message Contracts**:
+  - Define message schemas for `CreateOrderCommand` and `UpdateOrderStatusCommand`.
 
-I hope this gives you a clear picture of how to approach the project. Enjoy the hackathon!
+#### **Database Setup**:
+
+- **Design Schema**:
+  - Create tables for Orders with fields like `OrderId`, `CustomerName`, `Items`, `Status`, etc.
+
+- **Migrations**:
+  - Apply EF Core migrations.
+
+#### **Prerequisites**:
+
+- Understanding of order management systems.
+- Experience with **event-driven architecture**.
+
+---
+
+### **4. Production Service**
+
+#### **API Service (Read-only via HTTP)**
+
+- **Implement Endpoints** (if needed for read operations):
+  - **Get Production Status**: `/api/production/status`
+
+#### **Worker Service (Write via AMQP)**
+
+- **Handle Messages**:
+  - **Create New Production Entry**:
+    - Listen for `CreateProductionCommand` messages.
+    - Insert new production tasks into the database.
+  - **Change Status**:
+    - Listen for `UpdateProductionStatusCommand` messages.
+    - Update production statuses.
+
+- **Message Contracts**:
+  - Define message schemas for `CreateProductionCommand` and `UpdateProductionStatusCommand`.
+
+#### **Database Setup**:
+
+- **Design Schema**:
+  - Create tables for Production with fields like `ProductionId`, `OrderId`, `Status`, `StartTime`, etc.
+
+#### **Prerequisites**:
+
+- Familiarity with production workflow processes.
+- Experience with **event-driven systems**.
+
+---
+
+### **5. Notifications Service**
+
+#### **Worker Service (Activated via AMQP)**
+
+- **Handle Messages**:
+  - **Receive Updates on IDs**:
+    - Listen for various update messages (e.g., order status changes, production updates).
+    - Process and possibly store or forward these notifications.
+
+- **Implement Notification Mechanism**:
+  - Decide on how notifications will be delivered (e.g., SignalR for real-time updates, email, etc.).
+
+#### **Prerequisites**:
+
+- Knowledge of **pub/sub messaging patterns**.
+- Experience with **SignalR** (if real-time notifications are implemented).
+- Understanding of **message routing** and **event aggregation**.
+
+---
+
+### **6. Frontend (Blazor App)**
+
+#### **Tasks**:
+
+- **UI Development**:
+  - **Menu Page**:
+    - Display all menu items.
+  - **Order Page**:
+    - Allow users to create new orders.
+    - Display open orders and order statuses.
+  - **Production Dashboard**:
+    - Show production statuses and updates.
+
+- **Integration with Gateway**:
+  - Consume APIs exposed by the Gateway service.
+  - Handle both read and write operations via appropriate channels.
+
+- **State Management**:
+  - Manage application state using Blazor's built-in mechanisms.
+
+#### **Prerequisites**:
+
+- Proficiency in **Blazor** and **Razor components**.
+- Experience with **HTTP client** in Blazor for API calls.
+- Understanding of **asynchronous programming** in C#.
+
+---
+
+### **7. Device Service**
+
+#### **API Service (If devices communicate via HTTP)**
+
+- **Implement Endpoints**:
+  - **Respond to Orders**: `/api/device/respond`
+    - Accept "Yes" or "No" responses to orders.
+
+#### **Worker Service (If devices communicate via AMQP)**
+
+- **Handle Messages**:
+  - **Process Device Responses**:
+    - Listen for `DeviceResponse` messages.
+    - Update orders or production statuses based on device input.
+
+#### **Prerequisites**:
+
+- Experience with **IoT devices** or external systems integration.
+- Understanding of **real-time communication protocols**.
+
+---
+
+## **Additional Considerations**
+
+- **Message Routing and Handling**:
+  - Ensure that messages are correctly routed between services.
+
+- **Error Handling and Logging**:
+  - Implement robust error handling mechanisms.
+  - Use logging frameworks (e.g., Serilog) to log information for diagnostics.
+
+- **Scalability**:
+  - Design services to be stateless where possible to allow horizontal scaling.
+
+- **Testing**:
+  - Write unit and integration tests for critical components.
+  - Mock external dependencies where necessary.
+
+---
+
+## **Final Notes**
+
+- **Team Coordination**:
+  - Assign tasks based on team members' strengths and expertise.
+  - Use version control systems like **Git** for collaborative development.
+
+- **Time Management**:
+  - Prioritize core functionalities that deliver the most value.
+  - Be mindful of the hackathon time constraints.
+
+- **Documentation**:
+  - Maintain clear documentation of APIs and message contracts.
+  - Comment code where necessary for clarity.
+
